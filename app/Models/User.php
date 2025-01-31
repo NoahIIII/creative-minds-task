@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -19,8 +20,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+        'phone',
+        'phone_verified_at',
         'password',
+        'profile_image',
+        'thumbnail_image',
+        'status',
+        'user_type',
     ];
 
     /**
@@ -31,6 +37,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -39,7 +47,38 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'phone_verified_at' => 'datetime',
         'password' => 'hashed',
+        'status' => 'boolean',
     ];
+
+    /**
+     * Accessor to get the thumbnail image url.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getThumbnailImageAttribute($value)
+    {
+        return asset('storage/images/' . $value);
+    }
+    /**
+     * Accessor to get the profile image url.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getProfileImageAttribute($value)
+    {
+        return asset('storage/images/' . $value);
+    }
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }

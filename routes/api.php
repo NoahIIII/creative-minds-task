@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Public\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+//---------------------------- User Auth Routes --------------------------------
+Route::group(['prefix'=>'auth'],function(){
+    Route::post('/signup',[AuthController::class,'signUp']);
+    Route::post('/signin',[AuthController::class,'login']);
+    Route::post('/verify-phone',[AuthController::class,'verifyOTP']);
 });
