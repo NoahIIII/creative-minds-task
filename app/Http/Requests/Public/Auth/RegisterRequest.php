@@ -23,13 +23,13 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>'required|min:2|max:50',
-            'phone'=>['required',new EgyptianPhoneNumber(),'unique:users,phone'],
-            'profile_image'=>'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'password'=>['required','min:8','confirmed'],
-            'address_lat'=>'required|min:-90|max:90',
-            'address_long'=>'required|min:-180|max:180',
-            'user_type'=>'required|in:user,delivery'
+            'name' => 'required|min:2|max:50',
+            'phone' => ['required', new EgyptianPhoneNumber(), 'unique:users,phone'],
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'password' => ['required', 'min:8', 'confirmed'],
+            'address_lat' => 'required|min:-90|max:90',
+            'address_long' => 'required|min:-180|max:180',
+            'user_type' => 'required|in:user,delivery',
         ];
     }
 }

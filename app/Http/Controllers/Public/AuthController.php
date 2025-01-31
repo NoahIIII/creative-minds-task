@@ -8,9 +8,12 @@ use App\Http\Requests\Public\Auth\RegisterRequest;
 use App\Http\Requests\Public\Auth\VerifyOTPRequest;
 use App\Models\User;
 use App\Services\AuthService;
+use App\Services\NotificationService;
 use App\Traits\ApiResponseTrait;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 
@@ -28,7 +31,7 @@ class AuthController extends Controller
         // store the user
         $user = User::create($userData);
         // verify the user phone number
-        $this->authService->sendVerificationCode($user->phone);
+        // $this->authService->sendVerificationCode($user->phone);
         return ApiResponseTrait::successResponse([], __('messages.otp_sent'));
     }
     /**
@@ -47,12 +50,16 @@ class AuthController extends Controller
         }
 
         // check if the user phone number is verified
-        if (!$user->phone_verified_at) {
-            $sendVerificationCode = $this->authService->sendVerificationCode($user->phone);
-            if ($sendVerificationCode instanceof JsonResponse) return $sendVerificationCode;
-            return ApiResponseTrait::errorResponse(__('auth.phone_not_verified'));
-        }
-
+        // if (!$user->phone_verified_at) {
+        //     $sendVerificationCode = $this->authService->sendVerificationCode($user->phone);
+        //     if ($sendVerificationCode instanceof JsonResponse) return $sendVerificationCode;
+        //     return ApiResponseTrait::errorResponse(__('auth.phone_not_verified'));
+        // }
+        // if($request->device_id){
+        //     // update the fcm token
+        //     $notifications = new NotificationService();
+        //     $notifications->updateDeviceToken($user, $request->validated());
+        // }
         // generate the token
         $token = auth('users')->login($user);
         return ApiResponseTrait::successResponse(['token' => $token]);
@@ -65,7 +72,7 @@ class AuthController extends Controller
     public function verifyOTP(VerifyOTPRequest $request)
     {
         // Rate Limiting
-        $rateLimit = $this->authService->applyRateLimit($request);
+        $rateLimit = $this->authService->applyRateLimit($request); // 5 attempts per minute
         if ($rateLimit instanceof JsonResponse) return $rateLimit;
 
         // verify the otp code
@@ -75,5 +82,18 @@ class AuthController extends Controller
         // login the user
         $token = auth('users')->login($user);
         return ApiResponseTrait::successResponse(['token' => $token]);
+    }
+    /**
+     * logout the current logged in user
+     */
+    public function logout()
+    {
+        try {
+            // $notification = new NotificationService();
+            // $notification->deleteDeviceToken(auth('users')->user(), auth('users')->user()->device_id);
+            Auth::logout();
+        } catch (Exception $e) {
+        }
+        return ApiResponseTrait::successResponse(null, __('messages.logged_out'));
     }
 }

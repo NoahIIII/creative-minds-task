@@ -27,6 +27,8 @@ class User extends Authenticatable implements JWTSubject
         'thumbnail_image',
         'status',
         'user_type',
+        'address_lat',
+        'address_long',
     ];
 
     /**
@@ -36,7 +38,9 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $hidden = [
         'password',
+        'phone_verified_at',
         'remember_token',
+        'status',
         'created_at',
         'updated_at',
     ];
@@ -60,7 +64,10 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getThumbnailImageAttribute($value)
     {
-        return asset('storage/images/' . $value);
+        if ($value) {
+            return asset('storage/images/' . $value);
+        }
+        return null;
     }
     /**
      * Accessor to get the profile image url.
@@ -70,7 +77,22 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getProfileImageAttribute($value)
     {
-        return asset('storage/images/' . $value);
+        if ($value) {
+            return asset('storage/images/' . $value);
+        }
+        return null;
+    }
+    /**
+     * User Type Scope
+     * @param mixed $query
+     */
+    public function scopeDelivery($query)
+    {
+        return $query->where('user_type', 'delivery');
+    }
+    public function fcmTokens()
+    {
+        return $this->hasMany(FcmToken::class);
     }
     public function getJWTIdentifier()
     {

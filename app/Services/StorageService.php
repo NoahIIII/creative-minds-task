@@ -38,4 +38,9 @@ class StorageService
         $thumbnail->save(public_path('storage/images/') . $directory . '/' . $imgName);
         return $directory . '/' . $imgName;
     }
+    // ------------------------ Delete Image File
+    public static function deleteImage($path)
+    {
+        Storage::delete('public/images/' . $path);
+    }
 }

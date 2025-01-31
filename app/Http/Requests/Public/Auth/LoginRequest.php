@@ -23,8 +23,11 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone'=>['required',new EgyptianPhoneNumber()],
-            'password'=>['required','min:8'],
+            'phone' => ['required', new EgyptianPhoneNumber()],
+            'password' => ['required', 'min:8'],
+            'fcm_token' => 'nullable|string|min:128|max:256',
+            'device_id' => 'required_with:fcm_token|string',
+            'device_type' => 'required_with:fcm_token|boolean'
         ];
     }
 }

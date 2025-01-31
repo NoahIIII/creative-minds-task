@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\FcmToken;
 use App\Models\OTP;
 use App\Models\User;
 use App\Traits\ApiResponseTrait;
@@ -21,11 +22,14 @@ class AuthService
      */
     public function handleRegisterData($data)
     {
-        $userData['name'] = $data['name'];
-        $userData['phone'] = $data['phone'];
-        $userData['password'] = Hash::make($data['password']);
-        $userData['user_type'] = $data['user_type'];
-        $userData['status'] = 1;
+        $userData = array_merge($data, [
+            'password' => Hash::make($data['password']),
+            'status' => 1,
+        ]);
+        //unset unnecessary data
+        unset($userData['fcm_token']);
+        unset($userData['device_id']);
+        unset($userData['device_type']);
         // store the profile image & create thumbnail
         if (isset($data['profile_image'])) {
             $userData['profile_image'] = StorageService::storeImage($data['profile_image'], 'users/profile', 'user_');
@@ -69,16 +73,16 @@ class AuthService
     /**
      * verify otp
      */
-    public function verifyOTP($phone,$code)
+    public function verifyOTP($phone, $code)
     {
         $user = User::where('phone', $phone)->first();
-        if(!$user){
-            return ApiResponseTrait::errorResponse(__('messages.not-found'),404);
+        if (!$user) {
+            return ApiResponseTrait::errorResponse(__('messages.not-found'), 404);
         }
         $otp = OTP::where('phone', $user->phone)->latest()->first();
 
         if (!$otp || !Hash::check($code, $otp->code)) {
-            return ApiResponseTrait::errorResponse(__('messages.invalid-otp'),400);
+            return ApiResponseTrait::errorResponse(__('messages.invalid-otp'), 400);
         }
 
         // $otp->expires_at is a string, convert it to a Carbon instance
@@ -86,7 +90,7 @@ class AuthService
 
         // Check if the OTP is expired
         if ($expiresAt->isBefore(now())) {
-            return ApiResponseTrait::errorResponse(__('messages.expired-otp'),400);
+            return ApiResponseTrait::errorResponse(__('messages.expired-otp'), 400);
         }
 
         // delete the otp

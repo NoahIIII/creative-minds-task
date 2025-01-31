@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('profile_image')->nullable();
             $table->string('thumbnail_image')->nullable();
             $table->string('status')->default(1);
-            $table->enum('user_type',['user','delivery'])->default('user');
-            $table->string('address_lat')->nullable();
-            $table->string('address_long')->nullable();
+            $table->enum('user_type', ['user', 'delivery'])->default('user');
+            $table->decimal('address_lat', 10, 7);
+            $table->decimal('address_long', 10, 7);
             $table->rememberToken();
             $table->timestamps();
         });

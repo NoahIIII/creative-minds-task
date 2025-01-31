@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('fcm_tokens', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users','id')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users', 'id')->onDelete('cascade');
             $table->string('token');
-            $table->string('device_type')->nullable();
+            $table->boolean('device_type')->nullable(); // 0 = Android, 1 = IOS
+            $table->string('device_id', 255)->unique();
             $table->timestamps();
         });
     }
