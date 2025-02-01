@@ -3,7 +3,8 @@
 ## Prerequisites
 - dashboard user: admin@admin.com 
 - dashboard pass : 123456789
-To run this project successfully, you need to configure the following services:
+
+-To run this project successfully, you need to configure the following services:
 
 - **Twilio** for SMS or messaging services.
 - **Firebase** for push notifications.
