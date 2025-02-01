@@ -1,0 +1,330 @@
+{
+	"info": {
+		"_postman_id": "031e03a0-c62a-457f-938c-e257a72d4fb9",
+		"name": "Creative Minds Task",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30959672",
+		"_collection_link": "https://blue-satellite-297700.postman.co/workspace/Msar-Awamer~486af1d3-3dde-4cdc-b766-cdf762935b75/collection/30959672-031e03a0-c62a-457f-938c-e257a72d4fb9?action=share&source=collection_link&creator=30959672"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Mohamed",
+									"description": "required , min 2 , max 50",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "201016083105",
+									"description": "required , fomart 201016023105",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"description": "required , min 8",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "12345678",
+									"description": "required , min 8 , same password value",
+									"type": "text"
+								},
+								{
+									"key": "address_lat",
+									"value": "39.7817",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "address_long",
+									"value": "89.6501",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "profile_image",
+									"description": "nullable , max 2048",
+									"type": "file",
+									"src": "/C:/Users/20101/Downloads/Screenshot_19 1.png"
+								},
+								{
+									"key": "user_type",
+									"value": "delivery",
+									"description": "required , user or deliver",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/auth/signup",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						},
+						"description": "### Signup API\n\nThis API endpoint is used to sign up a new user.\n\n#### Request Body Parameters\n\n- `name` (text, required): The name of the user. It should be a minimum of 2 characters and a maximum of 50 characters.\n    \n- `phone` (text, required): The phone number of the user in the format 201016023105.\n    \n- `password` (text, required): The password for the user account. It should be a minimum of 8 characters.\n    \n- `password_confirmation` (text, required): Confirmation of the password. It should be the same as the password value.\n    \n- `address_lat` (text, required): The latitude of the user's address.\n    \n- `address_long` (text, required): The longitude of the user's address.\n    \n- `profile_image` (file, nullable): The user's profile image with a maximum size of 2048 KB.\n    \n- `user_type` (text, required): The type of user, it can be either \"user\" or \"deliver\".\n    \n\n#### Response\n\nThe response of this request is a JSON object with the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"data\": {\n      \"type\": \"array\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"status\": {\n      \"type\": \"integer\"\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "phone",
+									"value": "201203546315",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/auth/signin",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify phone number",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "phone",
+									"value": "201203546315",
+									"description": "format : 201203546315",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "1194",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/auth/verify-phone",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"verify-phone"
+							]
+						},
+						"description": "### Verify Phone Number\n\nThe `POST` request is used to verify the user's phone number.\n\n#### Request Body\n\n- `phone` (text): The user's phone number to be verified.\n    \n- `code` (text): The verification code sent to the user's phone.\n    \n\n#### Response\n\nThe response is in JSON format and follows the schema below:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"data\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"token\": {\n                    \"type\": \"string\"\n                }\n            }\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"status\": {\n            \"type\": \"integer\"\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "update device token",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fcm_token\": \"bX4yL9M0NkWpQaJ6E3V5C7T8R1FZdYtO\",\r\n  \"device_id\": \"ios-0987654321fedcba\",\r\n  \"device_type\": 0 // 0 Android 1 IOS\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/notifications/update-token",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"notifications",
+								"update-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/auth/logout",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "get profile data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/profile/",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"profile",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Deliveries",
+			"item": [
+				{
+					"name": "Get Nearest Deliveries",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/delivery/nearest?radius=10",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"delivery",
+								"nearest"
+							],
+							"query": [
+								{
+									"key": "radius",
+									"value": "10"
+								}
+							]
+						},
+						"description": "The `GET` request to `/api/delivery/nearest` endpoint retrieves the nearest delivery locations within a specified radius. The response is in JSON format and has the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"deliveries\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"id\": {\n                \"type\": \"integer\"\n              },\n              \"name\": {\n                \"type\": \"string\"\n              },\n              \"thumbnail_image\": {\n                \"type\": \"string\"\n              },\n              \"address_long\": {\n                \"type\": \"string\"\n              },\n              \"address_lat\": {\n                \"type\": \"string\"\n              },\n              \"distance\": {\n                \"type\": \"integer\"\n              }\n            }\n          }\n        }\n      }\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"status\": {\n      \"type\": \"integer\"\n    }\n  }\n}\n\n ```\n\nQuery Params\n\nradius = > nullable | numeric"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvc2lnbmluIiwiaWF0IjoxNzM4NDI1ODY1LCJleHAiOjE3NDYyMDE4NjUsIm5iZiI6MTczODQyNTg2NSwianRpIjoiZjNWQWpXMXRiY3RvaWEzQSIsInN1YiI6IjE3IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.UhNFnyFZ80O-kE6TGM-uUn8ZP4An6VP4VfEaiNIbbrY",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
