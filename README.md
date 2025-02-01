@@ -1,6 +1,8 @@
 # Project Setup Instructions
 
 ## Prerequisites
+- dashboard user: admin@admin.com 
+- dashboard pass : 123456789
 To run this project successfully, you need to configure the following services:
 
 - **Twilio** for SMS or messaging services.
@@ -22,3 +24,4 @@ For Firebase push notifications, you need to add the Firebase credentials.
 Place the firebase_credentials.json file in the app/services directory of the project.
 ```
 Make sure this file contains the necessary credentials to authenticate with Firebase Cloud Messaging (FCM).
+
