@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\StaffUserAuthController;
 use App\Http\Controllers\Dashboard\UserController;
 use Illuminate\Support\Facades\Route;
@@ -24,7 +25,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('/logout', [StaffUserAuthController::class, 'logout'])->name('logout');
 
     //--------------------------------Dashboard Routes -------------------------------------------------------------
-    // Route::group(['middleware' => 'auth:staff_users'], function () {
+    Route::group(['middleware' => 'auth:staff_users'], function () {
 
         Route::view('/','index')->name('dashboard.index');
         //-------------------------- Manage Users Routes -----------------------------
@@ -44,6 +45,10 @@ use Illuminate\Support\Facades\Route;
             Route::delete('/destroy/{user}', [UserController::class, 'destroy'])
                 ->name('users.destroy');
         });
-
-    // });
+        //-------------------------- Notification Routes -----------------------------
+        Route::group(['prefix' => 'notifications'], function () {
+            Route::get('/', [NotificationController::class, 'create'])->name('notifications.create');
+            Route::post('/send', [NotificationController::class, 'send'])->name('notifications.send');
+        });
+    });
 

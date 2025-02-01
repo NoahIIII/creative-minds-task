@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -31,8 +32,8 @@ class AuthController extends Controller
         // store the user
         $user = User::create($userData);
         // verify the user phone number
-        // $this->authService->sendVerificationCode($user->phone);
-        return ApiResponseTrait::successResponse([], __('messages.otp_sent'));
+        $this->authService->sendVerificationCode($user->phone);
+        return ApiResponseTrait::successResponse([], __('messages.otp-sent'));
     }
     /**
      * login a user
@@ -46,15 +47,15 @@ class AuthController extends Controller
         $user = User::where('phone', $credentials['phone'])->first();
         // check if the user exists & password is correct
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return ApiResponseTrait::errorResponse(__('auth.invalid_credentials'));
+            return ApiResponseTrait::errorResponse(__('auth.failed'));
         }
 
         // check if the user phone number is verified
-        // if (!$user->phone_verified_at) {
-        //     $sendVerificationCode = $this->authService->sendVerificationCode($user->phone);
-        //     if ($sendVerificationCode instanceof JsonResponse) return $sendVerificationCode;
-        //     return ApiResponseTrait::errorResponse(__('auth.phone_not_verified'));
-        // }
+        if (!$user->phone_verified_at) {
+            $sendVerificationCode = $this->authService->sendVerificationCode($user->phone);
+            if ($sendVerificationCode instanceof JsonResponse) return $sendVerificationCode;
+            return ApiResponseTrait::errorResponse(__('auth.phone_not_verified'));
+        }
         // if($request->device_id){
         //     // update the fcm token
         //     $notifications = new NotificationService();
@@ -75,13 +76,18 @@ class AuthController extends Controller
         $rateLimit = $this->authService->applyRateLimit($request); // 5 attempts per minute
         if ($rateLimit instanceof JsonResponse) return $rateLimit;
 
+        // check if the user phone number is already verified
+        if (auth('users')->check() && auth('users')->user()->phone_verified_at != null) {
+            return ApiResponseTrait::errorResponse(__('auth.phone_already_verified'));
+        }
+
         // verify the otp code
         $user = $this->authService->verifyOTP($request->validated()['phone'], $request->validated()['code']);
         if ($user instanceof JsonResponse) return $user;
 
         // login the user
         $token = auth('users')->login($user);
-        return ApiResponseTrait::successResponse(['token' => $token]);
+        return ApiResponseTrait::successResponse(['token' => $token], __('auth.phone_verified'));
     }
     /**
      * logout the current logged in user
@@ -91,9 +97,10 @@ class AuthController extends Controller
         try {
             // $notification = new NotificationService();
             // $notification->deleteDeviceToken(auth('users')->user(), auth('users')->user()->device_id);
-            Auth::logout();
+            auth('users')->logout();
+            JWTAuth::invalidate(JWTAuth::getToken());
         } catch (Exception $e) {
         }
-        return ApiResponseTrait::successResponse(null, __('messages.logged_out'));
+        return ApiResponseTrait::successResponse(null, __('messages.logout'));
     }
 }

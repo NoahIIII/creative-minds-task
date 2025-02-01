@@ -39,7 +39,10 @@
                                         class="ri-file-list-line"></i>{{ ___('Users List') }}</a></li>
                         </ul>
                     </li>
-
+                    {{-- Notifications --}}
+                    <li class="{{ isActiveRoute('notifications.create') }}"><a href="{{ route('notifications.create') }}"><i
+                                class="ri-notification-3-line"></i>{{ ___('Notifications') }}</a>
+                    </li>
                 </ul>
             </nav>
             <div class="p-3"></div>
@@ -52,7 +55,7 @@
                 <div class="top-logo">
                     <a href="../index.html" class="logo">
                         <img src="../images/logo.gif" class="img-fluid" alt="">
-                        <span>Creative Mind Task</span>
+                        <span>Plus Plus</span>
                     </a>
                 </div>
             </div>
@@ -68,8 +71,44 @@
                         <div class="hover-circle"><i class="ri-arrow-right-s-line"></i></div>
                     </div>
                 </div>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto navbar-list">
 
-                {{-- <ul class="navbar-list">
+                        <li class="nav-item">
+                            <a href="#" class="search-toggle iq-waves-effect">
+                                <div id="lottie-beil"></div>
+                                <span class="bg-danger dots"></span>
+                            </a>
+                            <div class="iq-sub-dropdown">
+                                <div class="iq-card shadow-none m-0">
+                                    <div class="iq-card-body p-0 ">
+                                        <div class="bg-primary p-3">
+                                            <h5 class="mb-0 text-white">{{ ___('All Notifications') }}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a href="#" class="search-toggle iq-waves-effect">
+                                <div id="lottie-mail"></div>
+                                <span class="bg-primary count-mail"></span>
+                            </a>
+                            <div class="iq-sub-dropdown">
+                                <div class="iq-card shadow-none m-0">
+                                    <div class="iq-card-body p-0 ">
+                                        <div class="bg-primary p-3">
+                                            <h5 class="mb-0 text-white">{{ ___('All Messages') }}</h5>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+                <ul class="navbar-list">
 
                     <li>
                         <a href="#"
@@ -78,7 +117,7 @@
                                 class="img-fluid rounded mr-3" alt="user">
                             <div class="caption">
                                 <h6 class="mb-0 line-height text-white">{{ auth('staff_users')->user()->name }}</h6>
-
+                                {{-- <span class="font-size-12 text-white">Available</span> --}}
                             </div>
                         </a>
                         <div class="iq-sub-dropdown iq-user-dropdown">
@@ -87,9 +126,7 @@
                                     <div class="bg-primary p-3">
                                         <h5 class="mb-0 text-white line-height">{{ ___('Hello') }}
                                             {{ auth('staff_users')->user()->name }}</h5>
-
                                     </div>
-
                                     <div class="d-inline-block w-100 text-center p-3">
                                         <form action="{{ route('logout') }}" method="POST"
                                             style="display: inline;">
@@ -103,7 +140,7 @@
                             </div>
                         </div>
                     </li>
-                </ul> --}}
+                </ul>
             </nav>
 
         </div>

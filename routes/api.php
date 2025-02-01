@@ -23,6 +23,7 @@ Route::group(['prefix' => 'auth', 'middleware' => 'throttle:60,1'], function () 
     Route::post('/signup', [AuthController::class, 'signUp']);
     Route::post('/signin', [AuthController::class, 'login']);
     Route::post('/verify-phone', [AuthController::class, 'verifyOTP']);
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('user_authentication');
 });
 
 //----------------------------- User Profile Routes --------------------------------

@@ -18,7 +18,7 @@
                             <img class="profile-pic" src="{{ asset('assets/images/user/default_user.png') }}" alt="profile-pic">
                             <div class="p-image">
                                 <i class="ri-pencil-line upload-button"></i>
-                                <input class="file-upload" name="user_img" type="file" accept="image/*" />
+                                <input class="file-upload" name="profile_image" type="file" accept="image/*" />
                             </div>
                         </div>
                     </div>
@@ -29,24 +29,42 @@
                         <input name="name" type="text" class="form-control" id="name"
                             placeholder="{{ ___('Full Name') }}">
                     </div>
-                </div>
-                <br>
-                <div class="row">
                     <div class="col">
-                        <label for="phone">{{ ___('Phone') }}</label>
+                        <label for="phone">{{ ___('Phone') }}*</label>
                         <input name="phone" type="text" class="form-control" id="phone"
-                            placeholder="{{ ___('Phone') }}">
+                            placeholder="201000000000">
                     </div>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col">
-                        <div class="custom-control custom-switch custom-control-inline">
-                            <input name="status" value="1" type="checkbox" class="custom-control-input"
-                                id="customSwitch2" checked="">
-                            <label class="custom-control-label" value="1"
-                                for="customSwitch2">{{ ___('Status') }}*</label>
-                        </div>
+                        <label for="level">{{ ___('Status') }}*</label>
+                            <select name="status" id="level" class="form-control">
+                                <option value="1">{{ ___('Active') }}</option>
+                                <option value="0">{{ ___('Inactive') }}</option>
+                            </select>
+                    </div>
+                    <div class="col">
+                            <label for="password">{{ ___('Password') }}*</label>
+                            <input name="password" type="password" class="form-control" id="password"
+                                placeholder="{{ ___('password') }}">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <label for="level">{{ ___('User Type') }}*</label>
+                            <select name="user_type" id="level" class="form-control">
+                                <option value="user">{{ ___('User') }}</option>
+                                <option value="delivery">{{ ___('Delivery') }}</option>
+                            </select>
+                    </div>
+                    <div class="col">
+                        <label for="level">{{ ___('Phone Verified') }}*</label>
+                            <select name="phone_verified" id="level" class="form-control">
+                                <option value="1">{{ ___('Verified') }}</option>
+                                <option value="0">{{ ___('Not Verified') }}</option>
+                            </select>
                     </div>
                 </div>
                 <br>
@@ -56,7 +74,6 @@
                     </button>
                 </div>
             </form>
-            <div id="validationErrors"></div>
         </div>
     </div>
 
@@ -87,10 +104,6 @@
                 error: function(xhr, status, error) {
                     console.log(xhr.responseJSON);
                     var errorsReturned = xhr.responseJSON.errors;
-                    // var errorsMessage = xhr.responseJSON.message;
-                    // if (errorsMessage != '') {
-                    //     toastr.error(errorsMessage);
-                    // }
                     if (errorsReturned) {
                         Object.keys(errorsReturned).forEach(function(key) {
                             errorsReturned[key].forEach(function(error) {

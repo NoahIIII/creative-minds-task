@@ -22,11 +22,12 @@ class UserAuthentication
             $user = JWTAuth::parseToken()->authenticate();
         } catch (TokenExpiredException $e) {
             try {
+                // refresh token for the mobile applications
                 // If token is expired, attempt to refresh it using the refresh token
-                $newToken = JWTAuth::refresh(JWTAuth::getToken());
+                // $newToken = JWTAuth::refresh(JWTAuth::getToken());
 
-                // Set the refreshed token and re-authenticate the user
-                $user = JWTAuth::setToken($newToken)->toUser();
+                // // Set the refreshed token and re-authenticate the user
+                // $user = JWTAuth::setToken($newToken)->toUser();
             } catch (TokenExpiredException $e) {
                 // If the refresh token expired, force the user to log in again
                 return ApiResponseTrait::errorResponse(__('auth.session_expired'), 401, ['force_logout' => true]);
@@ -43,7 +44,7 @@ class UserAuthentication
         }
 
         if (!$user) {
-            return ApiResponseTrait::errorResponse(__('auth.user_not_found'), 401);
+            return ApiResponseTrait::errorResponse(__('auth.invalid_token'), 401);
         }
 
         if (!$user->status) {

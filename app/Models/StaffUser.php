@@ -14,12 +14,14 @@ class StaffUser extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
     use HasFactory;
 
+    protected $primaryKey = 'staff_user_id';
     protected $guard = 'staff_users';
 
     protected $fillable = [
         'name',
         'email',
         'password',
+        'status',
         'staff_user_img',
     ];
 

@@ -75,7 +75,8 @@ class AuthService
      */
     public function verifyOTP($phone, $code)
     {
-        $user = User::where('phone', $phone)->first();
+        $user = User::where('phone', $phone)
+            ->first();
         if (!$user) {
             return ApiResponseTrait::errorResponse(__('messages.not-found'), 404);
         }
@@ -97,8 +98,7 @@ class AuthService
         $otp->delete();
 
         // verify user phone number
-        $user->phone_verified_at = now();
-        $user->save();
+        $user->update(['phone_verified_at' => now()]);
 
         return $user;
     }
@@ -119,5 +119,61 @@ class AuthService
             );
         }
         RateLimiter::hit($key, $decaySeconds);
+    }
+    /**
+     * handle store user data
+     * @param $request
+     * @param $userData
+     */
+    public function handleStoreUserData($request, $userData)
+    {
+        // handle image
+        if ($request->hasFile('profile_image')) {
+            $userData['profile_image'] = StorageService::storeImage($request->file('profile_image'), 'users/profile', 'user_');
+            $userData['thumbnail_image'] = StorageService::createThumbnail($request->file('profile_image'), 'users/thumbnail', 'user_');
+        }
+
+        // phone verification
+        $userData['phone_verified_at'] = $request->phone_verified ? now() : null;
+        unset($userData['phone_verified']);
+
+        // hash the password
+        $userData['password'] = Hash::make($request->password);
+
+        return $userData;
+    }
+    /**
+     * handle update user data
+     */
+    public function handleUpdateUserData($request, $userData, $user)
+    {
+        // hash the password
+        $userData['password'] = $request->filled('password') ? Hash::make($request->password) : $user->password;
+
+        // handle images
+        if ($request->hasFile('profile_image')) {
+            // delete the old image
+            if (!empty($user->profile_image)) {
+                StorageService::deleteImage($user->profile_image);
+            }
+            if (!empty($user->thumbnail_image)) {
+                StorageService::deleteImage($user->thumbnail_image);
+            }
+            // store the new image
+            $userData['profile_image'] = StorageService::storeImage($request->file('profile_image'), 'users/profile', 'user_');
+            $userData['thumbnail_image'] = StorageService::createThumbnail($request->file('profile_image'), 'users/thumbnail', 'user_');
+        }
+
+        // phone verification
+        if ($request->phone_verified) {
+            $userData['phone_verified_at'] = $user->phone_verified_at ?? now();
+        } else {
+            $userData['phone_verified_at'] = null;
+        }
+
+        unset($userData['phone_verified']);
+
+        // return user data
+        return $userData;
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -38,7 +40,6 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $hidden = [
         'password',
-        'phone_verified_at',
         'remember_token',
         'status',
         'created_at',
@@ -81,6 +82,16 @@ class User extends Authenticatable implements JWTSubject
             return asset('storage/images/' . $value);
         }
         return null;
+    }
+    public function getFormattedCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
+    }
+
+    // You can create a similar accessor for any other date attribute
+    public function getFormattedUpdatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
     }
     /**
      * User Type Scope

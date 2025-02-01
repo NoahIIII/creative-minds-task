@@ -34,6 +34,7 @@
                                     <th>{{ ___('Name') }}</th>
                                     <th>{{ ___('Phone') }}</th>
                                     <th>{{ ___('Phone Verified') }}</th>
+                                    <th>{{ ___('User Type') }}</th>
                                     <th>{{ ___('Status') }}</th>
                                     <th>{{ ___('Join Date') }}</th>
                                     <th></th>
@@ -44,10 +45,10 @@
                                 @foreach ($users as $user)
                                     <tr>
                                         <td class="text-center"><img class="rounded-circle img-fluid avatar-40"
-                                                src="{{ getImageUrl($user->user_img) ?? asset('assets/images/user/default_user.png') }}"
+                                                src="{{ $user->thumbnail_image ?? asset('assets/images/user/default_user.png') }}"
                                                 alt="profile"></td>
                                         <td>{{ $user->name }}</td>
-                                        <td>{{ $user->phone }}</td>
+                                        <td><a href="tel:+{{ $user->phone }}">+{{ $user->phone }}</a></td>
                                         <td>
                                             @if ($user->phone_verified_at)
                                                 <span class="badge iq-bg-success">{{ ___('Verified') }}</span>
@@ -55,6 +56,7 @@
                                                 <span class="badge iq-bg-warning">{{ ___('Not Verified') }}</span>
                                             @endif
                                         </td>
+                                        <td>{{ ucfirst($user->user_type) }}</td>
                                         <td>
                                             @if ($user->status)
                                                 <span
@@ -69,7 +71,7 @@
                                                 <x-delete-button :route="route('users.destroy', $user)" title="{{ ___('Delete') }}" />
                                                     <a class="iq-bg-primary ml-2" data-placement="top" title=""
                                                         data-original-title="{{ ___('Edit') }}"
-                                                        href="{{ route('users.edit', $user->user_id) }}">
+                                                        href="{{ route('users.edit', $user->id) }}">
                                                         <i class="ri-pencil-line"></i>
                                                     </a>
 

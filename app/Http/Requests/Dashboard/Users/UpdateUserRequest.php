@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Dashboard\Users;
 
+use App\Rules\EgyptianPhoneNumber;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -25,9 +26,12 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name'=>'required|min:1|max:50',
-            'phone' => ['required', 'digits_between:10,15', Rule::unique('users', 'phone')->ignore($this->route('user')->id, 'id')],
+            'phone' => ['required', Rule::unique('users', 'phone')->ignore($this->route('user')->id, 'id'), new EgyptianPhoneNumber()],
             'profile_image'=>'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'status'=>'nullable|boolean',
+            'status'=>'required|boolean',
+            'password'=>'nullable|min:8|string',
+            'user_type'=>'required|in:user,delivery',
+            'phone_verified'=>'required|boolean',
         ];
     }
     public function failedValidation($validator)
